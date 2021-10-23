@@ -1,3 +1,4 @@
+import itertools
 import fedjax
 import jax
 from run_fed_alg import run_federated_algorithm
@@ -11,14 +12,12 @@ model_params = load_config(FILENAME)
 # load the EMNIST federated dataset
 train, test = fedjax.datasets.emnist.load_data()
 
-# example of a readily available fedjax.Model
+# creating a fedjax.Model object and initializing its parameters
 model = fedjax.models.emnist.create_logistic_model()
-
-# initial params for the fedjax.Model
 rng = jax.random.PRNGKey(0)
 init_params = model.init(rng) # weights and biases
 
-# Creating a federated algorithm object
+# Creating a federated algorithm object and initializing its server state
 grad_fn = fedjax.model_grad(model) 
 client_optimizer = fedjax.optimizers.sgd(
     model_params['client']['learning_rate']
@@ -37,7 +36,8 @@ fed_alg = fedjax.algorithms.fed_avg.federated_averaging(
 )
 init_server_state = fed_alg.init(init_params)
 
-run_federated_algorithm(
+# run fed alg
+final_server_state = run_federated_algorithm(
     federated_dataset=train,
     fed_alg=fed_alg,
     server_state=init_server_state,
@@ -45,3 +45,15 @@ run_federated_algorithm(
     num_clients_per_round=model_params['server']['num_clients_per_round'],
     rng = rng
 )
+
+# evaluation
+params = final_server_state.params
+
+# We select first 16 batches using itertools.islice
+batched_test_data = list(itertools.islice(
+    fedjax.padded_batch_federated_data(test, batch_size=128), 16))
+batched_train_data = list(itertools.islice(
+    fedjax.padded_batch_federated_data(train, batch_size=128), 16))
+
+print('eval_test', fedjax.evaluate_model(model, params, batched_test_data))
+print('eval_train', fedjax.evaluate_model(model, params, batched_train_data))
