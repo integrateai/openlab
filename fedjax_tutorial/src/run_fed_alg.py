@@ -1,5 +1,6 @@
 import fedjax
 import jax
+import logging
 
 
 def run_federated_algorithm(
@@ -19,7 +20,12 @@ def run_federated_algorithm(
             seed=j+1
         )
         sampled_clients_with_data = client_sampler.sample()
-
+        logging.info(
+            'Round: {}, Clients: {}'.format(
+                j+1,
+                sampled_clients_with_data
+            )
+        )
         # client update & aggregated updates via FederatedAlgorithm.apply
         client_inputs = []
         for client_id, client_data, client_rng in sampled_clients_with_data:

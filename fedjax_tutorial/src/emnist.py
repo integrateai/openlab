@@ -1,10 +1,18 @@
 import itertools
 import fedjax
 import jax
+import logging
 from run_fed_alg import run_federated_algorithm
 from utils import load_config
 
 FILENAME = "emnist"
+
+logging.basicConfig(
+    filename='logs/{}.log'.format(FILENAME),
+    filemode='w',
+    format='%(asctime)s %(levelname)s: %(message)s',
+    level=logging.DEBUG
+)
 
 # load config
 model_params = load_config(FILENAME)
@@ -13,7 +21,8 @@ model_params = load_config(FILENAME)
 train, test = fedjax.datasets.emnist.load_data()
 
 # creating a fedjax.Model object and initializing its parameters
-model = fedjax.models.emnist.create_conv_model()
+model = fedjax.models.emnist.create_logistic_model()
+# model = fedjax.models.emnist.create_conv_model()
 rng = jax.random.PRNGKey(0)
 init_params = model.init(rng) # weights and biases
 
