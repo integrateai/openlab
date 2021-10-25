@@ -13,16 +13,16 @@ model_params = load_config(FILENAME)
 train, test = fedjax.datasets.emnist.load_data()
 
 # creating a fedjax.Model object and initializing its parameters
-model = fedjax.models.emnist.create_logistic_model()
+model = fedjax.models.emnist.create_conv_model()
 rng = jax.random.PRNGKey(0)
 init_params = model.init(rng) # weights and biases
 
 # Creating a federated algorithm object and initializing its server state
 grad_fn = fedjax.model_grad(model) 
-client_optimizer = fedjax.optimizers.sgd(
+client_optimizer = fedjax.optimizers.adagrad(
     model_params['client']['learning_rate']
 )
-server_optimizer = fedjax.optimizers.sgd(
+server_optimizer = fedjax.optimizers.adagrad(
     model_params['server']['learning_rate']
 )
 batch_hparams = fedjax.ShuffleRepeatBatchHParams(
