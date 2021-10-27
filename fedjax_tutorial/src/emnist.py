@@ -50,8 +50,8 @@ final_server_state, _ = run_federated_algorithm(
     federated_dataset=train,
     fed_alg=fed_alg,
     server_state=init_server_state,
-    num_rounds=model_params['server']['num_rounds'],
-    num_clients_per_round=model_params['server']['num_clients_per_round'],
+    num_clients_per_round=[model_params['server']['num_clients_per_round']]\
+            * model_params['server']['num_rounds'],
     rng = rng
 )
 
