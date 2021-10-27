@@ -5,9 +5,11 @@ name = "pypi"
 
 [packages]
 fedjax = "*"
+pylint = "==2.5.3"
+astroid = "==2.5.0"
+tensorflow = "==2.5.0"
 
 [dev-packages]
-pylint = "*"
 
 [requires]
 python_version = "3.8"
