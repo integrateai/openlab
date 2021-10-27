@@ -39,9 +39,9 @@ def run_federated_algorithm(
         for client_id, client_data, client_rng in sampled_clients_with_data:
             rng, use_rng = jax.random.split(rng)
             client_inputs.append((client_id, client_data, use_rng))
-            updated_server_state, client_diagnostics = fed_alg.apply(
-                server_state,
-                client_inputs
-            )
-            server_state = updated_server_state
+        updated_server_state, client_diagnostics = fed_alg.apply(
+            server_state,
+            client_inputs
+        )
+        server_state = updated_server_state
     return server_state, client_diagnostics
