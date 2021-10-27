@@ -23,8 +23,7 @@ model_params = load_config(FILENAME)
 train, test = fedjax.datasets.emnist.load_data()
 
 # creating a fedjax.Model object and initializing its parameters
-model = fedjax.models.emnist.create_logistic_model()
-# model = fedjax.models.emnist.create_conv_model()
+model = fedjax.models.emnist.create_conv_model()
 rng = jax.random.PRNGKey(0)
 init_params = model.init(rng) # weights and biases
 
