@@ -1,4 +1,5 @@
 import json
+import logging
 from functools import wraps
 from time import time
 
@@ -10,9 +11,8 @@ def timing(f):
         ts = time()
         result = f(*args, **kw)
         te = time()
-        print('func:{} took: {:2.4f} sec'\
-            .format(f.__name__, te-ts)
-        )
+        print('func:{} took: {:2.4f} sec'.format(f.__name__, te-ts))
+        logging.info('func:{} took: {:2.4f} sec'.format(f.__name__, te-ts))
         return result
     return wrap
 
