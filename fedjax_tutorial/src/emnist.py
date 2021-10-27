@@ -46,7 +46,7 @@ fed_alg = fedjax.algorithms.fed_avg.federated_averaging(
 init_server_state = fed_alg.init(init_params)
 
 # run fed alg
-final_server_state = run_federated_algorithm(
+final_server_state, _ = run_federated_algorithm(
     federated_dataset=train,
     fed_alg=fed_alg,
     server_state=init_server_state,
