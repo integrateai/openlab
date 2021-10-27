@@ -2,8 +2,8 @@ import itertools
 import fedjax
 import jax
 import logging
-from run_fed_alg import run_federated_algorithm
-from utils import load_config
+from src.run_fed_alg import run_federated_algorithm
+from src.utils import load_config
 
 FILENAME = "emnist"
 

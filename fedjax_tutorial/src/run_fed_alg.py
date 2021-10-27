@@ -30,9 +30,9 @@ def run_federated_algorithm(
         )
         sampled_clients_with_data = client_sampler.sample()
         logging.info(
-            'Round: %d, Clients: %s' %\
+            'Round: %d, Clients: %d',
             j+1,
-            ', '.join([client[0] for client in sampled_clients_with_data])
+            len(sampled_clients_with_data)
         )
         # client update & aggregated updates via FederatedAlgorithm.apply
         client_inputs = []
@@ -43,5 +43,5 @@ def run_federated_algorithm(
                 server_state,
                 client_inputs
             )
-        server_state = updated_server_state
+            server_state = updated_server_state
     return server_state, client_diagnostics

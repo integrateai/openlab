@@ -9,4 +9,4 @@ pip install --upgrade jax jaxlib==0.1.69+cuda111 -f https://storage.googleapis.c
 
 # Running Example
 1. `pipenv shell`
-2. `python src/emnist.py`
+2. `python -m src.emnist`
