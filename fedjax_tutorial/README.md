@@ -3,3 +3,10 @@ pip install --upgrade jax jaxlib==0.1.69+cuda111 -f https://storage.googleapis.c
 
 # Setup up
 `./setup.sh`
+
+# Virtual environment setup
+`pipenv sync`
+
+# Running Example
+1. `pipenv shell`
+2. `python src/emnist.py`
