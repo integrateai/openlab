@@ -1,7 +1,9 @@
+"""module for running FL example on EMNIST data"""
+
 import itertools
+import logging
 import fedjax
 import jax
-import logging
 from src.run_fed_alg import run_federated_algorithm
 from src.utils import load_config
 
@@ -27,7 +29,7 @@ rng = jax.random.PRNGKey(0)
 init_params = model.init(rng) # weights and biases
 
 # Creating a federated algorithm object and initializing its server state
-grad_fn = fedjax.model_grad(model) 
+grad_fn = fedjax.model_grad(model)
 client_optimizer = fedjax.optimizers.adagrad(
     model_params['client']['learning_rate']
 )
@@ -52,7 +54,7 @@ final_server_state, _ = run_federated_algorithm(
     server_state=init_server_state,
     num_clients_per_round=[model_params['server']['num_clients_per_round']]\
             * model_params['server']['num_rounds'],
-    rng = rng
+    rng=rng
 )
 
 # evaluation
