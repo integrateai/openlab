@@ -1,8 +1,9 @@
 import fedjax
 import jax
 import logging
+from utils import timing
 
-
+@timing
 def run_federated_algorithm(
     federated_dataset,
     fed_alg,
