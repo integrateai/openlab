@@ -1,5 +1,6 @@
 """convenience module for running fl algorithm"""
 
+import itertools
 import logging
 import fedjax
 import jax
@@ -40,3 +41,33 @@ def run_federated_algorithm(
         )
         server_state = updated_server_state
     return server_state, client_diagnostics
+
+@timing
+def eval_federated_alg(model, params, train, test, batch_params):
+    """
+    Convenience function for computing performance metrics of a model
+    on train and test federated datsets.
+    """
+    batched_test = list(
+        itertools.islice(
+            fedjax.padded_batch_federated_data(
+                test,
+                batch_size=batch_params['test']['size']
+            ),
+            batch_params['test']['num_batches']
+        )
+    )
+    batched_train = list(
+        itertools.islice(
+            fedjax.padded_batch_federated_data(
+                train,
+                batch_size=batch_params['train']['size']
+            ),
+            batch_params['train']['num_batches']
+        )
+    )
+    print('eval_test', fedjax.evaluate_model(model, params, batched_test))
+    print('eval_train', fedjax.evaluate_model(model, params, batched_train))
+    logging.info(
+        "performed evaluation model on batched train and test dataset"
+    )

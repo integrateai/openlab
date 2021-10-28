@@ -1,10 +1,9 @@
 """module for running FL example on EMNIST data"""
 
-import itertools
 import logging
 import fedjax
 import jax
-from src.run_fed_alg import run_federated_algorithm
+from src.run_fed_alg import run_federated_algorithm, eval_federated_alg
 from src.utils import load_config
 
 FILENAME = "emnist"
@@ -17,7 +16,9 @@ logging.basicConfig(
 )
 
 # load config
-model_params = load_config(FILENAME)
+config = load_config(FILENAME)
+model_params = config['model_params']
+eval_params = config['eval_params']
 
 # load the EMNIST federated dataset
 train, test = fedjax.datasets.emnist.load_data()
@@ -56,14 +57,9 @@ final_server_state, _ = run_federated_algorithm(
     rng=rng
 )
 
-# evaluation
-params = final_server_state.params
-
-# We select first 16 batches using itertools.islice
-batched_test_data = list(itertools.islice(
-    fedjax.padded_batch_federated_data(test, batch_size=128), 16))
-batched_train_data = list(itertools.islice(
-    fedjax.padded_batch_federated_data(train, batch_size=128), 16))
-
-print('eval_test', fedjax.evaluate_model(model, params, batched_test_data))
-print('eval_train', fedjax.evaluate_model(model, params, batched_train_data))
+# evaluation of server model
+eval_federated_alg(
+    model, final_server_state.params,
+    train, test,
+    batch_params=eval_params
+)
