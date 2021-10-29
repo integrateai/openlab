@@ -21,7 +21,7 @@ def create_stax_cifar_conv_model() -> models.Model:
     stax_init, stax_apply = stax.serial(
         stax.Conv(
             out_chan=6,
-            filter_shape=(3, 3),
+            filter_shape=(5, 5),
             strides=(1, 1),
             padding='same'
         ),
@@ -36,13 +36,16 @@ def create_stax_cifar_conv_model() -> models.Model:
         ),
         stax.Relu,
         stax.BatchNorm(),
+        stax.Dropout(0.05),
         stax.Flatten,
         stax.Dense(120),
         stax.Relu,
         stax.BatchNorm(axis=(0, 1)),
+        stax.Dropout(0.25),
         stax.Dense(84),
         stax.Relu,
         stax.BatchNorm(axis=(0, 1)),
+        stax.Dropout(0.5),
         stax.Dense(num_classes),
     )
     return models.create_model_from_stax(
