@@ -9,8 +9,8 @@
         },
         "server": {
           "learning_rate": 1.0,
-          "num_rounds": 1500,
-          "num_clients_per_round": 50
+          "num_rounds": 1,
+          "num_clients_per_round": 10
         }
     },
     "eval_params": {

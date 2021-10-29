@@ -9,6 +9,7 @@ pylint = "==2.5.3"
 astroid = "==2.5.0"
 tensorflow = "==2.5.0"
 tensorflow_datasets = "*"
+dm-haiku = "*"
 
 [dev-packages]
 
