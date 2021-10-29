@@ -5,8 +5,8 @@ pip install --upgrade jax jaxlib==0.1.69+cuda111 -f https://storage.googleapis.c
 `./setup.sh`
 
 # Virtual environment setup
-`pipenv sync`
+`poetry install`
 
 # Running Example
-1. `pipenv shell`
+1. `poetry shell`
 2. `python -m src.emnist`
