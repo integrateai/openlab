@@ -4,7 +4,7 @@ import logging
 import fedjax
 import jax
 from src.custom_datasets import create_cifar_fedjax_dataset
-from src.custom_models import create_cifar_conv_model
+from src.custom_models import create_stax_cifar_conv_model
 from src.fed_alg_helper import run_federated_alg, eval_federated_alg
 from src.utils import load_config
 
@@ -26,7 +26,7 @@ eval_params = config['eval_params']
 train, test = create_cifar_fedjax_dataset()
 
 # creating a fedjax.Model object and initializing its parameters
-model = create_cifar_conv_model()
+model = create_stax_cifar_conv_model()
 rng = jax.random.PRNGKey(0)
 init_params = model.init(rng) # weights and biases
 
