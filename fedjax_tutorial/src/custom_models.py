@@ -1,6 +1,8 @@
 """A module for creating custom FedJAX Models for cifar10 example"""
 
 from jax.experimental import stax
+from jax import random
+import jax.numpy as jnp
 from fedjax.core import metrics
 from fedjax.core import models
 
@@ -37,6 +39,7 @@ def create_stax_cifar_conv_model() -> models.Model:
         stax.Relu,
         stax.BatchNorm(),
         stax.Flatten,
+        ProperDropout(0.25),
         stax.Dense(120),
         stax.Relu,
         stax.BatchNorm(axis=(0, 1)),
@@ -51,4 +54,27 @@ def create_stax_cifar_conv_model() -> models.Model:
         sample_shape=_STAX_SAMPLE_SHAPE,
         train_loss=_TRAIN_LOSS,
         eval_metrics=_EVAL_METRICS,
+        train_kwargs={'mode': 'train'},
+        eval_kwargs={'mode': 'score'}
     )
+
+
+def ProperDropout(rate):
+    def init_fun(rng, input_shape):
+        return input_shape, ()
+    def apply_fun(params, inputs, **kwargs):
+        mode = kwargs.get('mode', 'train')
+        rng = kwargs.get('rng', None)
+        if (rng is None) & (mode != 'train'):
+            msg = ("Dropout layer requires apply_fun to be called with a PRNG key "
+            "argument. That is, instead of `apply_fun(params, inputs)`, call "
+            "it like `apply_fun(params, inputs, rng)` where `rng` is a "
+            "jax.random.PRNGKey value.")
+            raise ValueError(msg)
+        if mode == 'train':
+            keep = random.bernoulli(rng, rate, inputs.shape)
+            return jnp.where(keep, inputs / rate, 0)
+        else:
+            return inputs
+    return init_fun, apply_fun
+
