@@ -39,13 +39,15 @@ def create_stax_cifar_conv_model() -> models.Model:
         stax.Relu,
         stax.BatchNorm(),
         stax.Flatten,
-        ProperDropout(0.25),
+        ProperDropout(0.15),
         stax.Dense(120),
         stax.Relu,
         stax.BatchNorm(axis=(0, 1)),
+        ProperDropout(0.25),
         stax.Dense(84),
         stax.Relu,
         stax.BatchNorm(axis=(0, 1)),
+        ProperDropout(0.50),
         stax.Dense(num_classes),
     )
     return models.create_model_from_stax(
@@ -59,22 +61,23 @@ def create_stax_cifar_conv_model() -> models.Model:
     )
 
 
-def ProperDropout(rate):
+def ProperDropout(rate): # pylint: disable=invalid-name
+    """Adapted stax.Dropout to function when mode != 'train'"""
     def init_fun(rng, input_shape):
         return input_shape, ()
     def apply_fun(params, inputs, **kwargs):
         mode = kwargs.get('mode', 'train')
         rng = kwargs.get('rng', None)
-        if (rng is None) & (mode != 'train'):
-            msg = ("Dropout layer requires apply_fun to be called with a PRNG key "
-            "argument. That is, instead of `apply_fun(params, inputs)`, call "
-            "it like `apply_fun(params, inputs, rng)` where `rng` is a "
-            "jax.random.PRNGKey value.")
+        if (rng is None) & (mode == 'train'):
+            msg = (
+                "Dropout layer requires apply_fun to be called with a PRNG key "
+                "argument. That is, instead of `apply_fun(params, inputs)`, call "
+                "it like `apply_fun(params, inputs, rng)` where `rng` is a "
+                "jax.random.PRNGKey value."
+            )
             raise ValueError(msg)
         if mode == 'train':
             keep = random.bernoulli(rng, rate, inputs.shape)
             return jnp.where(keep, inputs / rate, 0)
-        else:
-            return inputs
+        return inputs
     return init_fun, apply_fun
-
