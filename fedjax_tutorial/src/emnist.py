@@ -16,10 +16,10 @@ logging.basicConfig(
 )
 
 def main():
+    """Main function for executing emnist example"""
     # load config
     config = load_config(FILENAME)
     model_params = config['model_params']
-    eval_params = config['eval_params']
 
     # load the EMNIST federated dataset
     train, test = fedjax.datasets.emnist.load_data()
@@ -62,7 +62,7 @@ def main():
     eval_federated_alg(
         model, final_server_state.params,
         train, test,
-        batch_params=eval_params
+        batch_params=config['eval_params']
     )
 
 if __name__ == "__main__":
