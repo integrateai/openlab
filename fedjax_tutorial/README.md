@@ -1,4 +1,4 @@
-# fedjax-cifar-example
+# Examples using FedJAX 
 
 # Setup
 `./setup.sh`
