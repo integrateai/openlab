@@ -9,4 +9,4 @@
 
 # Running Example
 1. `poetry shell`
-2. `python -m src.emnist`
+2. `python -m src.emnist` or `python -m src.cifar`
