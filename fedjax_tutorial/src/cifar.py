@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 
 def main():
-    """Main function for executing emnist example"""
+    """Main function for executing cifar example"""
     # load config
     config = load_config(FILENAME)
     model_params = config['model_params']
